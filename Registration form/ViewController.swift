@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     //MARK:- Outlets
     @IBOutlet weak var txtFname: UITextField!
     @IBOutlet weak var txtLname: UITextField!
@@ -26,7 +26,10 @@ class ViewController: UIViewController {
     @IBAction func onBtnSubmitClick(_ sender: UIButton) {
         checkTxtNilorNot()
         matchPassword()
-   
+        if isValidEmail(emailStr: txtEmail.text!) != true {
+            alertPopUp(aleartMessage: "Please Enter Valid Email Address!")
+        }
+        
     }
     
     //MARK:- Other Method
@@ -50,12 +53,16 @@ class ViewController: UIViewController {
         }
     }
     
-    func alertPopUp(aleartMessage :String) {
-            let alert = UIAlertController(title: "Required", message: aleartMessage, preferredStyle: UIAlertController.Style.alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }
+    func isValidEmail(emailStr:String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        
+        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: emailStr)
     }
     
-
-
+    func alertPopUp(aleartMessage :String) {
+        let alert = UIAlertController(title: "Mandatory Field", message: aleartMessage, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+}
